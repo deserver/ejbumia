@@ -16,6 +16,7 @@
  */
 package py.pol.una.ii.pw.controller;
 
+import java.util.List;
 import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
@@ -47,6 +48,16 @@ public class ProductController {
 
     private Product newProduct;
     
+    private List<Product> productsmatched;
+    
+    private String nameProduct;
+    
+    @Produces
+    @Named
+    public String getProductName(){
+    	return nameProduct;
+    }
+    
     private Long someid;
 
     @Produces
@@ -54,6 +65,13 @@ public class ProductController {
     public Product getNewProduct() {
         return newProduct;
     }
+    
+    @Produces
+    @Named
+    public List<Product> getMatches(){
+    	return productsmatched;
+    }
+    
 
     public void register() throws Exception {
 		try {
@@ -70,6 +88,7 @@ public class ProductController {
     
     public void delete(Long id) throws Exception {
     	try{
+    		log.info("Borrando = " + id);
     		productRegistration.delete(id);
     		facesContext.addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_INFO, "Deleted!", "Delete successful"));
@@ -97,6 +116,7 @@ public class ProductController {
     
     public void registerMod() throws Exception{
     	try {
+    		log.info("newproduct = " + newProduct.getId());
     		productRegistration.update(newProduct);
             facesContext.addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_INFO, "Modified!", "Modification successful"));
@@ -106,6 +126,24 @@ public class ProductController {
             FacesMessage m = new FacesMessage(FacesMessage.SEVERITY_ERROR, errorMessage, "Registration Unsuccessful");
             facesContext.addMessage(null, m);
         }
+    }
+    
+    public void search(String name){
+    	log.info("No llega = ");
+    	log.info("Name: " + name);
+    	productsmatched = (List<Product>)productRegistration.search(name);
+		
+		if (!productsmatched.isEmpty())
+			log.info("List = " + productsmatched.get(0));
+		else
+			log.info("Vacio = ");
+		facesContext.addMessage(null,
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Found!", "Search successful"));
+    	try{
+    		
+    	}catch (Exception e){
+    		e.printStackTrace();
+    	}
     }
 
     @PostConstruct

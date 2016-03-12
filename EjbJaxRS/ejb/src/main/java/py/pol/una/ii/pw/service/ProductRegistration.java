@@ -22,6 +22,8 @@ import javax.ejb.Stateless;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+
+import java.util.List;
 import java.util.logging.Logger;
 
 // The @Stateless annotation eliminates the need for manual transaction demarcation
@@ -65,6 +67,17 @@ public class ProductRegistration {
     		e.printStackTrace();
     	}
     	
+    }
+    
+    public List<Product> search(String name){
+    	log.info("Searching " + name);
+    	List<Product> result = (List<Product>)em.createQuery("SELECT p FROM Product p WHERE p.name LIKE :pname")
+    		.setParameter("pname", "%"+name+"%")
+    		.setMaxResults(10)
+    		.getResultList();
+    	if (result.isEmpty())
+    		log.info("Esta vacio nio");
+    	return result;
     }
     public Product getProduct(Long id){
     	Product product = new Product();

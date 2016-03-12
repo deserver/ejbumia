@@ -22,6 +22,8 @@ import javax.ejb.Stateless;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+
+import java.util.List;
 import java.util.logging.Logger;
 
 // The @Stateless annotation eliminates the need for manual transaction demarcation
@@ -41,5 +43,45 @@ public class MemberRegistration {
         log.info("Registering " + member.getName());
         em.persist(member);
         memberEventSrc.fire(member);
+    }
+    
+    public void delete(Long id){
+    	Member member = new Member();
+    	member = em.find(Member.class, id);
+    	log.info("Deleting " + member.getName());
+    	em.remove(member);
+    	memberEventSrc.fire(member);
+    }
+    
+    public void update(Member newMember) throws Exception{
+    	
+    	try{
+    		log.info("Updating " + newMember.getId());
+    		Member oldMember = getmember(newMember.getId());
+    		em.merge(oldMember);
+    		oldMember.setName(newMember.getName());
+    		oldMember.setEmail(newMember.getEmail());
+    		oldMember.setPhoneNumber(newMember.getPhoneNumber());
+    		memberEventSrc.fire(oldMember);
+    	}catch(Exception e){
+    		e.printStackTrace();
+    	}
+    	
+    }
+    
+    public List<Member> search(String name){
+    	log.info("Searching " + name);
+    	List<Member> result = (List<Member>)em.createQuery("SELECT m FROM Member m WHERE m.name LIKE :pname")
+    		.setParameter("pname", "%"+name+"%")
+    		.setMaxResults(10)
+    		.getResultList();
+    	if (result.isEmpty())
+    		log.info("Esta vacio nio");
+    	return result;
+    }
+    public Member getmember(Long id){
+    	Member member = new Member();
+    	member = em.find(Member.class, id);
+    	return member;
     }
 }

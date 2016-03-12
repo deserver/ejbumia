@@ -16,6 +16,9 @@
  */
 package py.pol.una.ii.pw.controller;
 
+import java.util.List;
+import java.util.logging.Logger;
+
 import javax.annotation.PostConstruct;
 import javax.enterprise.inject.Model;
 import javax.enterprise.inject.Produces;
@@ -39,13 +42,35 @@ public class MemberController {
 
     @Inject
     private MemberRegistration memberRegistration;
+    
+    @Inject
+    private Logger log;
+    
 
     private Member newMember;
+    
+    private List<Member> membersmatched;
+    
+    private String namemember;
+    
+    @Produces
+    @Named
+    public String getmemberName(){
+    	return namemember;
+    }
+    
+    private Long someid;
 
     @Produces
     @Named
-    public Member getNewMember() {
+    public Member getnewMember() {
         return newMember;
+    }
+    
+    @Produces
+    @Named
+    public List<Member> getMatchesMembers(){
+    	return membersmatched;
     }
 
     public void register() throws Exception {
@@ -53,16 +78,77 @@ public class MemberController {
             memberRegistration.register(newMember);
             facesContext.addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_INFO, "Registered!", "Registration successful"));
-            initNewMember();
+            initnewMember();
         } catch (Exception e) {
             String errorMessage = getRootErrorMessage(e);
             FacesMessage m = new FacesMessage(FacesMessage.SEVERITY_ERROR, errorMessage, "Registration Unsuccessful");
             facesContext.addMessage(null, m);
         }
     }
+    
+    
+    public void delete(Long id) throws Exception {
+    	try{
+    		log.info("Borrando = " + id);
+    		memberRegistration.delete(id);
+    		facesContext.addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Deleted!", "Delete successful"));
+    	}catch (Exception e){
+    		String errorMessage = getRootErrorMessage(e);
+            FacesMessage m = new FacesMessage(FacesMessage.SEVERITY_ERROR, errorMessage, "Registration Unsuccessful");
+            facesContext.addMessage(null, m);
+    	}
+    }
+    
+    public void modify(Long id) throws Exception{
+    	try{
+    		newMember = memberRegistration.getmember(id);
+    		someid = id;
+    		log.info("Some Id = " + id);
+    		//newMember.setId(modmember.getId());
+    		//newMember.setCantidad(modmember.getCantidad());
+    		//newMember.setName(modmember.getName());
+    	}catch (Exception e){
+    		String errorMessage = getRootErrorMessage(e);
+            FacesMessage m = new FacesMessage(FacesMessage.SEVERITY_ERROR, errorMessage, "Registration Unsuccessful");
+            facesContext.addMessage(null, m);
+    	}
+    }
+    
+    public void registerMod() throws Exception{
+    	try {
+    		log.info("newMember = " + newMember.getId());
+    		memberRegistration.update(newMember);
+            facesContext.addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Modified!", "Modification successful"));
+            initnewMember();
+        } catch (Exception e) {
+            String errorMessage = getRootErrorMessage(e);
+            FacesMessage m = new FacesMessage(FacesMessage.SEVERITY_ERROR, errorMessage, "Registration Unsuccessful");
+            facesContext.addMessage(null, m);
+        }
+    }
+    
+    public void search(String name){
+    	log.info("No llega = ");
+    	log.info("Name: " + name);
+    	membersmatched = (List<Member>)memberRegistration.search(name);
+		
+		if (!membersmatched.isEmpty())
+			log.info("List = " + membersmatched.get(0));
+		else
+			log.info("Vacio = ");
+		facesContext.addMessage(null,
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Found!", "Search successful"));
+    	try{
+    		
+    	}catch (Exception e){
+    		e.printStackTrace();
+    	}
+    }
 
     @PostConstruct
-    public void initNewMember() {
+    public void initnewMember() {
         newMember = new Member();
     }
 

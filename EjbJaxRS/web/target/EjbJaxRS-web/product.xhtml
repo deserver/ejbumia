@@ -21,7 +21,9 @@
    xmlns:h="http://java.sun.com/jsf/html"
    template="/WEB-INF/templates/default.xhtml">
    <ui:define name="content">
-      <h1>Productos</h1>
+      <h1>Modificar Productos</h1>
+      <a href="#{request.contextPath}/productos.jsf">Atras</a>
+      
 
       <div>
          
@@ -32,7 +34,7 @@
          <h:panelGrid columns="3" columnClasses="titleCell">
          	
             <h:outputLabel for="id" value="Id: "/>
-            <h:inputText id="id" value="#{newProduct.id}" disabled="disabled"/>
+            <h:inputText id="id" value="#{newProduct.id}"/>
             <h:message for="id" errorClass="invalid"/>
 
 			<h:outputLabel for="name" value="Nombre:"/>
@@ -43,15 +45,9 @@
             <h:inputText id="cantidad" value="#{newProduct.cantidad}"/>
             <h:message for="cantidad" errorClass="invalid"/>
             
-            
-            
-            
-
          </h:panelGrid>
-
          <p>
             <h:panelGrid columns="2">
-               
 				<h:commandButton id="modify" type="submit" action="#{productController.registerMod}" method="POST" value="Modify" styleClass="register"/>
             </h:panelGrid>
          </p>
@@ -61,6 +57,7 @@
          <em>No registered products.</em>
       </h:panelGroup>
       <h:dataTable var="_product" value="#{products}" rendered="#{not empty products}" styleClass="simpletablestyle">
+
          <h:column>
             <f:facet name="header">Id</f:facet>
                 #{_product.id}
@@ -89,4 +86,5 @@
          </f:facet>
       </h:dataTable>
    </ui:define>
+   
 </ui:composition>

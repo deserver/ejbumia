@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    JBoss, Home of Professional Open Source
+    Copyright 2013, Red Hat, Inc. and/or its affiliates, and individual
+    contributors by the @authors tag. See the copyright.txt in the
+    distribution for a full listing of individual contributors.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+    http://www.apache.org/licenses/LICENSE-2.0
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+   xmlns:ui="http://java.sun.com/jsf/facelets"
+   xmlns:f="http://java.sun.com/jsf/core"
+   xmlns:h="http://java.sun.com/jsf/html"
+   template="/WEB-INF/templates/default.xhtml">
+   <ui:define name="content">
+      <h1>Proveedores</h1>
+		<a href="#{request.contextPath}/index.jsf"><h5>Atras</h5></a>
+      <div>
+         
+      </div>
+
+      <h:form id="reg2">
+         <h2>Registro de Proveedores </h2>
+         <h:panelGrid columns="3" columnClasses="titleCell">
+            <h:outputLabel for="name" value="Nombre:"/>
+            <h:inputText id="name" value="#{newProvider.name}" />
+            <h:message for="name" errorClass="invalid"/>
+
+             <h:outputLabel for="phoneNumber" value="Telefono"/>
+            <h:inputText id="phoneNumber" value="#{newProvider.phoneNumber}"/>
+            <h:message for="phoneNumber" errorClass="invalid"/>
+            
+            <h:outputLabel for="informacion" value="Informacion:"/>
+            <h:inputText id="informacion" value="#{newProvider.informacion}"/>
+            <h:message for="informacion" errorClass="invalid"/>
+            
+
+            
+            
+
+         </h:panelGrid>
+
+         <p>
+            <h:panelGrid columns="2">
+               <h:commandButton id="register" action="#{providerController.register}" value="Register" styleClass="register"/>
+               <h:messages styleClass="messages" errorClass="invalid" infoClass="valid" warnClass="warning"
+                           globalOnly="true"/>
+            </h:panelGrid>
+         </p>
+      </h:form>
+      
+      <h2>Buscar</h2>
+      <h:form id="search">
+      	<h5>Ingresar el nombre del proveedor</h5>
+      	<h:inputText id="name" value="#{providerName}" name="name" />
+      	<h:commandButton id="search" type="submit" action="#{providerController.search(providerName)}" method="POST" value="Go"/>
+      </h:form>
+      <h:panelGroup rendered="#{empty matchesProviders}">
+         <em>No Matches.</em>
+      </h:panelGroup>
+      
+      <h:dataTable var="_provider" value="#{matchesProviders}" rendered="#{not empty matchesProviders}" styleClass="simpletablestyle">
+      		
+         <h:column>
+            <f:facet name="header">Id</f:facet>
+                #{_provider.id}
+            </h:column>
+         <h:column>
+            <f:facet name="header">Name</f:facet>
+                #{_provider.name}
+            </h:column>
+         <h:column>
+            <f:facet name="header">Phone Number</f:facet>
+                #{_provider.phoneNumber}
+            </h:column>
+         <h:column>
+            <f:facet name="header">Informacion</f:facet>
+                #{_provider.informacion}
+            </h:column>
+         <h:column>
+            <f:facet name="header">REST URL</f:facet>
+            <a href="#{request.contextPath}/rest/providers/#{_provider.id}">/rest/providers/#{_provider.id}</a>
+         </h:column>
+         
+         <f:facet name="footer">
+            REST URL for all providers: <a href="#{request.contextPath}/rest/provider">/rest/providers</a>
+         </f:facet>
+         
+      </h:dataTable>
+      
+      <h2>Proveedores</h2>
+      
+      <h:panelGroup rendered="#{empty providers}">
+         <em>No registered providers.</em>
+      </h:panelGroup>
+      
+      <h:dataTable var="_provider" value="#{providers}" rendered="#{not empty providers}" styleClass="simpletablestyle">
+      		
+         <h:column>
+            <f:facet name="header">Id</f:facet>
+                #{_provider.id}
+            </h:column>
+         <h:column>
+            <f:facet name="header">Name</f:facet>
+                #{_provider.name}
+            </h:column>
+		<h:column>
+            <f:facet name="header">Phone Number</f:facet>
+                #{_provider.phoneNumber}
+            </h:column>
+         <h:column>
+            <f:facet name="header">Informacion</f:facet>
+                #{_provider.informacion}
+            </h:column>
+         <h:column>
+            <f:facet name="header">REST URL</f:facet>
+            <a href="#{request.contextPath}/rest/providers/#{_provider.id}">/rest/providers/#{_provider.id}</a>
+         </h:column>
+          <h:column>
+            <f:facet name="header">Accion</f:facet>
+            <h:form id="del" style="width: 100px">
+            	<!-- <h:input type="hidden" value="#{_product.id}"/> -->
+            	<h:commandButton id="del" type="submit" action="#{providerController.delete(_provider.id)}" method="POST" styleClass="" value="Borrar"/>
+            </h:form>
+         </h:column>
+         <f:facet name="footer">
+         	<a href="#{request.contextPath}/provider.jsf"><h5>Modificar</h5></a>
+            REST URL for all providers: <a href="#{request.contextPath}/rest/providers">/rest/providers</a>
+         </f:facet>
+         
+      </h:dataTable>
+      
+      
+       
+   </ui:define>
+</ui:composition>

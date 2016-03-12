@@ -34,6 +34,8 @@ public class ProductListProducer {
     private ProductRepository productRepository;
 
     private List<Product> products;
+    
+
 
     // @Named provides access the return value via the EL variable name "members" in the UI (e.g.,
     // Facelets or JSP view)
@@ -42,6 +44,9 @@ public class ProductListProducer {
     public List<Product> getProducts() {
         return products;
     }
+    
+
+    
 
     public void onProductListChanged(@Observes(notifyObserver = Reception.IF_EXISTS) final Product product) {
         retrieveAllProductsOrderedByName();

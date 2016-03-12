@@ -47,10 +47,45 @@
                <h:commandButton id="register" action="#{productController.register}" value="Register" styleClass="register"/>
                <h:messages styleClass="messages" errorClass="invalid" infoClass="valid" warnClass="warning"
                            globalOnly="true"/>
-				<h:commandButton id="modify" type="submit" action="#{productController.registerMod}" method="POST" value="Modify" styleClass="register"/>
             </h:panelGrid>
          </p>
       </h:form>
+      
+      <h2>Buscar</h2>
+      <h:form id="search">
+      	<h5>Ingresar el nombre del producto</h5>
+      	<h:inputText id="name" value="#{productName}" name="name" />
+      	<h:commandButton id="search" type="submit" action="#{productController.search(productName)}" method="POST" value="Go"/>
+      </h:form>
+      <h:panelGroup rendered="#{empty matches}">
+         <em>No Matches.</em>
+      </h:panelGroup>
+      
+      <h:dataTable var="_product" value="#{matches}" rendered="#{not empty matches}" styleClass="simpletablestyle">
+      		
+         <h:column>
+            <f:facet name="header">Id</f:facet>
+                #{_product.id}
+            </h:column>
+         <h:column>
+            <f:facet name="header">Name</f:facet>
+                #{_product.name}
+            </h:column>
+         <h:column>
+            <f:facet name="header">Cantidad</f:facet>
+                #{_product.cantidad}
+            </h:column>
+         <h:column>
+            <f:facet name="header">REST URL</f:facet>
+            <a href="#{request.contextPath}/rest/products/#{_product.id}">/rest/products/#{_products.id}</a>
+         </h:column>
+         
+         <f:facet name="footer">
+            REST URL for all products: <a href="#{request.contextPath}/rest/products">/rest/products</a>
+         </f:facet>
+         
+      </h:dataTable>
+      
       <h2>Productos</h2>
       
       <h:panelGroup rendered="#{empty products}">
@@ -88,5 +123,8 @@
          </f:facet>
          
       </h:dataTable>
+      
+      
+       
    </ui:define>
 </ui:composition>

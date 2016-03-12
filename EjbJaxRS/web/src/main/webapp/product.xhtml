@@ -34,7 +34,7 @@
          <h:panelGrid columns="3" columnClasses="titleCell">
          	
             <h:outputLabel for="id" value="Id: "/>
-            <h:inputText id="id" value="#{newProduct.id}" disabled="disabled"/>
+            <h:inputText id="id" value="#{newProduct.id}"/>
             <h:message for="id" errorClass="invalid"/>
 
 			<h:outputLabel for="name" value="Nombre:"/>
@@ -45,15 +45,9 @@
             <h:inputText id="cantidad" value="#{newProduct.cantidad}"/>
             <h:message for="cantidad" errorClass="invalid"/>
             
-            
-            
-            
-
          </h:panelGrid>
-
          <p>
             <h:panelGrid columns="2">
-               
 				<h:commandButton id="modify" type="submit" action="#{productController.registerMod}" method="POST" value="Modify" styleClass="register"/>
             </h:panelGrid>
          </p>
