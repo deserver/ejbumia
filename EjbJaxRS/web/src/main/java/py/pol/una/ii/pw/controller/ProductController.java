@@ -46,6 +46,8 @@ public class ProductController {
     private ProductRegistration productRegistration;
 
     private Product newProduct;
+    
+    private Long someid;
 
     @Produces
     @Named
@@ -81,6 +83,8 @@ public class ProductController {
     public void modify(Long id) throws Exception{
     	try{
     		newProduct = productRegistration.getProduct(id);
+    		someid = id;
+    		log.info("Some Id = " + id);
     		//newProduct.setId(modProduct.getId());
     		//newProduct.setCantidad(modProduct.getCantidad());
     		//newProduct.setName(modProduct.getName());
@@ -91,10 +95,9 @@ public class ProductController {
     	}
     }
     
-    public void registerMod(Long id) throws Exception{
+    public void registerMod() throws Exception{
     	try {
-    		newProduct.setId(id);
-            productRegistration.update(newProduct);
+    		productRegistration.update(newProduct);
             facesContext.addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_INFO, "Modified!", "Modification successful"));
             initNewProduct();

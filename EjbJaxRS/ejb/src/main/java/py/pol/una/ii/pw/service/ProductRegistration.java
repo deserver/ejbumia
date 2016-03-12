@@ -52,9 +52,19 @@ public class ProductRegistration {
     	productEventSrc.fire(product);
     }
     
-    public void update(Product product){
-    	em.merge(product);
-    	productEventSrc.fire(product);
+    public void update(Product newProduct) throws Exception{
+    	
+    	try{
+    		log.info("Updating " + newProduct.getId());
+    		Product oldProduct = getProduct(newProduct.getId());
+    		em.merge(oldProduct);
+    		oldProduct.setName(newProduct.getName());
+    		oldProduct.setCantidad(newProduct.getCantidad());
+    		productEventSrc.fire(oldProduct);
+    	}catch(Exception e){
+    		e.printStackTrace();
+    	}
+    	
     }
     public Product getProduct(Long id){
     	Product product = new Product();

@@ -53,6 +53,7 @@ public class Product implements Serializable {
     @Column(name = "cantidad")
     private String cantidad;
 
+    
     public Long getId() {
         return id;
     }
@@ -76,4 +77,5 @@ public class Product implements Serializable {
     public void setCantidad(String cantidad) {
         this.cantidad = cantidad;
     }
+    
 }

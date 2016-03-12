@@ -28,15 +28,22 @@
       </div>
 
       <h:form id="reg2">
-         <h2>Registro de Productos </h2>
+         <h2>Modificacion de Productos </h2>
          <h:panelGrid columns="3" columnClasses="titleCell">
-            <h:outputLabel for="name" value="Nombre:"/>
+         	
+            <h:outputLabel for="id" value="Id: "/>
+            <h:inputText id="id" value="#{newProduct.id}" disabled="disabled"/>
+            <h:message for="id" errorClass="invalid"/>
+
+			<h:outputLabel for="name" value="Nombre:"/>
             <h:inputText id="name" value="#{newProduct.name}" />
             <h:message for="name" errorClass="invalid"/>
-
+            
             <h:outputLabel for="cantidad" value="Cantidad:"/>
             <h:inputText id="cantidad" value="#{newProduct.cantidad}"/>
             <h:message for="cantidad" errorClass="invalid"/>
+            
+            
             
             
 
@@ -44,21 +51,16 @@
 
          <p>
             <h:panelGrid columns="2">
-               <h:commandButton id="register" action="#{productController.register}" value="Register" styleClass="register"/>
-               <h:messages styleClass="messages" errorClass="invalid" infoClass="valid" warnClass="warning"
-                           globalOnly="true"/>
+               
 				<h:commandButton id="modify" type="submit" action="#{productController.registerMod}" method="POST" value="Modify" styleClass="register"/>
             </h:panelGrid>
          </p>
       </h:form>
       <h2>Productos</h2>
-      
       <h:panelGroup rendered="#{empty products}">
          <em>No registered products.</em>
       </h:panelGroup>
-      
       <h:dataTable var="_product" value="#{products}" rendered="#{not empty products}" styleClass="simpletablestyle">
-      		<a href="#{request.contextPath}/product.jsf"><h5>Modificar</h5></a>
          <h:column>
             <f:facet name="header">Id</f:facet>
                 #{_product.id}
@@ -79,13 +81,12 @@
             <f:facet name="header">Accion</f:facet>
             <h:form id="del" style="width: 100px">
             	<!-- <h:input type="hidden" value="#{_product.id}"/> -->
-            	<h:commandButton id="del" type="submit" action="#{productController.delete(_product.id)}" method="POST" styleClass="" value="Borrar"/>
+            	<h:commandButton id="mod" type="submit" action="#{productController.modify(_product.id)}" method="POST" styleClass="" value="Modificar"/>
             </h:form>
          </h:column>
          <f:facet name="footer">
             REST URL for all products: <a href="#{request.contextPath}/rest/products">/rest/products</a>
          </f:facet>
-         
       </h:dataTable>
    </ui:define>
 </ui:composition>
