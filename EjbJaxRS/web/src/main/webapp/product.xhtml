@@ -21,7 +21,9 @@
    xmlns:h="http://java.sun.com/jsf/html"
    template="/WEB-INF/templates/default.xhtml">
    <ui:define name="content">
-      <h1>Productos</h1>
+      <h1>Modificar Productos</h1>
+      <a href="#{request.contextPath}/productos.jsf">Atras</a>
+      
 
       <div>
          
@@ -61,6 +63,7 @@
          <em>No registered products.</em>
       </h:panelGroup>
       <h:dataTable var="_product" value="#{products}" rendered="#{not empty products}" styleClass="simpletablestyle">
+
          <h:column>
             <f:facet name="header">Id</f:facet>
                 #{_product.id}
@@ -89,4 +92,5 @@
          </f:facet>
       </h:dataTable>
    </ui:define>
+   
 </ui:composition>

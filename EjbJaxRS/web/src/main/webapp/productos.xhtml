@@ -22,7 +22,7 @@
    template="/WEB-INF/templates/default.xhtml">
    <ui:define name="content">
       <h1>Productos</h1>
-
+		<a href="#{request.contextPath}/index.jsf"><h5>Atras</h5></a>
       <div>
          
       </div>
@@ -58,7 +58,7 @@
       </h:panelGroup>
       
       <h:dataTable var="_product" value="#{products}" rendered="#{not empty products}" styleClass="simpletablestyle">
-      		<a href="#{request.contextPath}/product.jsf"><h5>Modificar</h5></a>
+      		
          <h:column>
             <f:facet name="header">Id</f:facet>
                 #{_product.id}
@@ -83,6 +83,7 @@
             </h:form>
          </h:column>
          <f:facet name="footer">
+         	<a href="#{request.contextPath}/product.jsf"><h5>Modificar</h5></a>
             REST URL for all products: <a href="#{request.contextPath}/rest/products">/rest/products</a>
          </f:facet>
          
