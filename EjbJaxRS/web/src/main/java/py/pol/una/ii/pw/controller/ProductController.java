@@ -52,6 +52,9 @@ public class ProductController {
     
     private String nameProduct;
     
+    private Boolean show; 
+    private Boolean nothingMatched = false;
+    
     @Produces
     @Named
     public String getProductName(){
@@ -70,6 +73,18 @@ public class ProductController {
     @Named
     public List<Product> getMatches(){
     	return productsmatched;
+    }
+    
+    @Produces
+    @Named
+    public Boolean getBoolShow(){
+    	return show;
+    }
+    
+    @Produces
+    @Named
+    public Boolean getNothingMatched(){
+    	return nothingMatched;
     }
     
 
@@ -129,18 +144,20 @@ public class ProductController {
     }
     
     public void search(String name){
-    	log.info("No llega = ");
     	log.info("Name: " + name);
     	productsmatched = (List<Product>)productRegistration.search(name);
 		
-		if (!productsmatched.isEmpty())
+		if (!productsmatched.isEmpty()){
 			log.info("List = " + productsmatched.get(0));
-		else
+    	}else{
 			log.info("Vacio = ");
-		facesContext.addMessage(null,
-                new FacesMessage(FacesMessage.SEVERITY_INFO, "Found!", "Search successful"));
+			nothingMatched = true;
+		}
+    }
+    
+    public void showList() throws Exception{
     	try{
-    		
+    		show = true;
     	}catch (Exception e){
     		e.printStackTrace();
     	}

@@ -79,6 +79,7 @@
             <h:form id="del" style="width: 100px">
             	<!-- <h:input type="hidden" value="#{_product.id}"/> -->
             	<h:commandButton id="mod" type="submit" action="#{productController.modify(_product.id)}" method="POST" styleClass="" value="Modificar"/>
+            	<h:commandButton id="del" type="submit" action="#{productController.delete(_product.id)}" method="POST" styleClass="" value="Borrar"/>
             </h:form>
          </h:column>
          <f:facet name="footer">

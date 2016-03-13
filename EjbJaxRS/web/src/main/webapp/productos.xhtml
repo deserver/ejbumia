@@ -56,73 +56,74 @@
       	<h5>Ingresar el nombre del producto</h5>
       	<h:inputText id="name" value="#{productName}" name="name" />
       	<h:commandButton id="search" type="submit" action="#{productController.search(productName)}" method="POST" value="Go"/>
+      
+
+	      <h:panelGroup rendered="#{empty matches and nothingMatched}">
+	         <em>No Matches.</em>
+	      </h:panelGroup>
+	      
+	      <h:dataTable var="_product" value="#{matches}" rendered="#{not empty matches}" styleClass="simpletablestyle">
+	      		
+	         <h:column>
+	            <f:facet name="header">Id</f:facet>
+	                #{_product.id}
+	            </h:column>
+	         <h:column>
+	            <f:facet name="header">Name</f:facet>
+	                #{_product.name}
+	            </h:column>
+	         <h:column>
+	            <f:facet name="header">Cantidad</f:facet>
+	                #{_product.cantidad}
+	            </h:column>
+	         <h:column>
+	            <f:facet name="header">REST URL</f:facet>
+	            <a href="#{request.contextPath}/rest/products/#{_product.id}">/rest/products/#{_products.id}</a>
+	         </h:column>
+	         
+	         <f:facet name="footer">
+	            REST URL for all products: <a href="#{request.contextPath}/rest/products">/rest/products</a>
+	         </f:facet>
+	         
+	      </h:dataTable>
       </h:form>
-      <h:panelGroup rendered="#{empty matches}">
-         <em>No Matches.</em>
-      </h:panelGroup>
-      
-      <h:dataTable var="_product" value="#{matches}" rendered="#{not empty matches}" styleClass="simpletablestyle">
-      		
-         <h:column>
-            <f:facet name="header">Id</f:facet>
-                #{_product.id}
-            </h:column>
-         <h:column>
-            <f:facet name="header">Name</f:facet>
-                #{_product.name}
-            </h:column>
-         <h:column>
-            <f:facet name="header">Cantidad</f:facet>
-                #{_product.cantidad}
-            </h:column>
-         <h:column>
-            <f:facet name="header">REST URL</f:facet>
-            <a href="#{request.contextPath}/rest/products/#{_product.id}">/rest/products/#{_products.id}</a>
-         </h:column>
-         
-         <f:facet name="footer">
-            REST URL for all products: <a href="#{request.contextPath}/rest/products">/rest/products</a>
-         </f:facet>
-         
-      </h:dataTable>
-      
-      <h2>Productos</h2>
-      
-      <h:panelGroup rendered="#{empty products}">
-         <em>No registered products.</em>
-      </h:panelGroup>
-      
-      <h:dataTable var="_product" value="#{products}" rendered="#{not empty products}" styleClass="simpletablestyle">
-      		
-         <h:column>
-            <f:facet name="header">Id</f:facet>
-                #{_product.id}
-            </h:column>
-         <h:column>
-            <f:facet name="header">Name</f:facet>
-                #{_product.name}
-            </h:column>
-         <h:column>
-            <f:facet name="header">Cantidad</f:facet>
-                #{_product.cantidad}
-            </h:column>
-         <h:column>
-            <f:facet name="header">REST URL</f:facet>
-            <a href="#{request.contextPath}/rest/products/#{_product.id}">/rest/products/#{_products.id}</a>
-         </h:column>
-          <h:column>
-            <f:facet name="header">Accion</f:facet>
-            <h:form id="del" style="width: 100px">
-            	<!-- <h:input type="hidden" value="#{_product.id}"/> -->
-            	<h:commandButton id="del" type="submit" action="#{productController.delete(_product.id)}" method="POST" styleClass="" value="Borrar"/>
-            </h:form>
-         </h:column>
-         <f:facet name="footer">
-         	<a href="#{request.contextPath}/product.jsf"><h5>Modificar</h5></a>
-            REST URL for all products: <a href="#{request.contextPath}/rest/products">/rest/products</a>
-         </f:facet>
-         
-      </h:dataTable>
+       <h2>Listar</h2>
+       <h:form>
+		<h5>Listar todos los Productos</h5>
+	      <h2>Productos</h2>
+	      
+	      <h:panelGroup rendered="#{empty products and boolShow}">
+	         <em>No registered products.</em>
+	      </h:panelGroup>
+	      
+	      <h:dataTable var="_product" value="#{products}" rendered="#{not empty products and boolShow}" styleClass="simpletablestyle">
+	      		
+	         <h:column>
+	            <f:facet name="header">Id</f:facet>
+	                #{_product.id}
+	            </h:column>
+	         <h:column>
+	            <f:facet name="header">Name</f:facet>
+	                #{_product.name}
+	            </h:column>
+	         <h:column>
+	            <f:facet name="header">Cantidad</f:facet>
+	                #{_product.cantidad}
+	            </h:column>
+	         <h:column>
+	            <f:facet name="header">REST URL</f:facet>
+	            <a href="#{request.contextPath}/rest/products/#{_product.id}">/rest/products/#{_products.id}</a>
+	         </h:column>
+
+	         <f:facet name="footer">
+	         	<a href="#{request.contextPath}/product.jsf"><h5>Modificar o Borrar Productos</h5></a>
+	            REST URL for all products: <a href="#{request.contextPath}/rest/products">/rest/products</a>
+	         </f:facet>
+	         
+	      </h:dataTable>
+        		
+       		<h:commandButton id="list" type="submit" action="#{productController.showList}" method="POST" value="Show"/>
+       </h:form>
       
       
        
