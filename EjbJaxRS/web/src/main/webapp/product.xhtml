@@ -45,10 +45,11 @@
             <h:inputText id="cantidad" value="#{newProduct.cantidad}"/>
             <h:message for="cantidad" errorClass="invalid"/>
             
+            
          </h:panelGrid>
          <p>
             <h:panelGrid columns="2">
-				<h:commandButton id="modify" type="submit" action="#{productController.registerMod}" method="POST" value="Modify" styleClass="register"/>
+				<h:commandButton id="modify" type="submit" action="#{productController.registerMod(idProvider)}" method="POST" value="Modify" styleClass="register"/>
             </h:panelGrid>
          </p>
       </h:form>
@@ -69,6 +70,10 @@
          <h:column>
             <f:facet name="header">Cantidad</f:facet>
                 #{_product.cantidad}
+            </h:column>
+		<h:column>
+            <f:facet name="header">Proveedor</f:facet>
+                #{_product.provider.name}
             </h:column>
          <h:column>
             <f:facet name="header">REST URL</f:facet>

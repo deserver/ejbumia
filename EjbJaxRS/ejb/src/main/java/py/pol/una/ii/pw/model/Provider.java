@@ -17,11 +17,15 @@
 package py.pol.una.ii.pw.model;
 
 import java.io.Serializable;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Digits;
@@ -59,7 +63,12 @@ public class Provider implements Serializable {
     @Size(min = 1, max = 256)
     @Column(name = "informacion")
     private String informacion;
-
+	
+	/*@OneToMany(mappedBy = "provider", fetch = FetchType.EAGER, 
+			cascade = {CascadeType.REMOVE, CascadeType.MERGE, CascadeType.PERSIST},
+			orphanRemoval = true)
+	private Set<Product> products;
+*/
     
     public Long getId() {
         return id;
@@ -92,5 +101,29 @@ public class Provider implements Serializable {
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
-    
+
+	/*public void addProduct(Product product){
+		this.products.add(product);
+		if (product.getProvider() != this){
+			product.setProvider(this);
+		}
+	}
+
+	public Set<Product> getProducts() {
+		return products;
+	}
+
+	public void setProducts(Set<Product> products) {
+		this.products = products;
+	}*/
+	
+	@Override
+	public String toString() {
+		StringBuilder result = new StringBuilder();
+	    String NEW_LINE = System.getProperty("line.separator");
+	    
+	    result.append("Name " + this.name);
+	    
+	    return result.toString();
+	}
 }
