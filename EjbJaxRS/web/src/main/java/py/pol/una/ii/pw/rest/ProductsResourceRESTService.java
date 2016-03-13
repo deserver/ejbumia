@@ -82,13 +82,14 @@ public class ProductsResourceRESTService {
     }
 
     /**
-     * Creates a new member from the values provided. Performs validation, and will return a JAX-RS response with either 200 ok,
+     * Creates a new member from the values provided. Performs validation, and will return a JAX-RS response with
+     *  either 200 ok,
      * or with a map of fields, and related errors.
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createProduct(Product product) {
+    public Response createProduct(Product product, Long idprov) {
 
         Response.ResponseBuilder builder = null;
 
@@ -96,7 +97,7 @@ public class ProductsResourceRESTService {
             // Validates member using bean validation
             validateProduct(product);
 
-            registration.register(product);
+            registration.register(product, idprov);
 
             // Create an "ok" response
             builder = Response.ok();

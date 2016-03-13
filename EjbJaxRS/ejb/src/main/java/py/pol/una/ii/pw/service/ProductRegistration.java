@@ -17,6 +17,7 @@
 package py.pol.una.ii.pw.service;
 
 import py.pol.una.ii.pw.model.Product;
+import py.pol.una.ii.pw.model.Provider;
 
 import javax.ejb.Stateless;
 import javax.enterprise.event.Event;
@@ -39,8 +40,11 @@ public class ProductRegistration {
     @Inject
     private Event<Product> productEventSrc;
 
-    public void register(Product product) {
+    public void register(Product product, Long providerId) {
 		log.info("Registering " + product.getName());
+		log.info("ProviderId " + providerId);
+		Provider provider = em.find(Provider.class, providerId);
+		product.setProvider(provider);
         em.persist(product);
         productEventSrc.fire(product);
         
@@ -50,11 +54,13 @@ public class ProductRegistration {
     	Product product = new Product();
     	product = em.find(Product.class, id);
     	log.info("Deleting " + product.getName());
+    	em.merge(product);
     	em.remove(product);
+    	em.getEntityManagerFactory().getCache().evictAll();
     	productEventSrc.fire(product);
     }
     
-    public void update(Product newProduct) throws Exception{
+    public void update(Product newProduct, Long idprov) throws Exception{
     	
     	try{
     		log.info("Updating " + newProduct.getId());
@@ -62,6 +68,7 @@ public class ProductRegistration {
     		em.merge(oldProduct);
     		oldProduct.setName(newProduct.getName());
     		oldProduct.setCantidad(newProduct.getCantidad());
+    		oldProduct.setProvider(em.find(Provider.class, idprov ));
     		productEventSrc.fire(oldProduct);
     	}catch(Exception e){
     		e.printStackTrace();

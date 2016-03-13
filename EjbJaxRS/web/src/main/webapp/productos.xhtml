@@ -38,13 +38,18 @@
             <h:inputText id="cantidad" value="#{newProduct.cantidad}"/>
             <h:message for="cantidad" errorClass="invalid"/>
             
+            <h:outputLabel id="prov"  value="Proveedor:"/>
+            <h:outputLabel id="empty" value="No existen proveedores registrados" rendered="#{empty providers}"/>
+            <h:selectOneMenu value="#{idProvider}" rendered="#{not empty providers}">
+            	<f:selectItems value="#{providers}" var="p" itemLabel="#{p.name}" itemValue="#{p.id}"></f:selectItems>
+            </h:selectOneMenu>
             
 
          </h:panelGrid>
 
          <p>
             <h:panelGrid columns="2">
-               <h:commandButton id="register" action="#{productController.register}" value="Register" styleClass="register"/>
+               <h:commandButton id="register" action="#{productController.register(idProvider)}" value="Register" styleClass="register"/>
                <h:messages styleClass="messages" errorClass="invalid" infoClass="valid" warnClass="warning"
                            globalOnly="true"/>
             </h:panelGrid>
@@ -54,7 +59,7 @@
       <h2>Buscar</h2>
       <h:form id="search">
       	<h5>Ingresar el nombre del producto</h5>
-      	<h:inputText id="name" value="#{productName}" name="name" />
+      	<h:inputText  id="name" value="#{productName}" name="name" />
       	<h:commandButton id="search" type="submit" action="#{productController.search(productName)}" method="POST" value="Go"/>
       
 
@@ -76,9 +81,13 @@
 	            <f:facet name="header">Cantidad</f:facet>
 	                #{_product.cantidad}
 	            </h:column>
+			<h:column>
+	            <f:facet name="header">Proveedor</f:facet>
+	                #{_product.provider.name}
+	            </h:column>
 	         <h:column>
 	            <f:facet name="header">REST URL</f:facet>
-	            <a href="#{request.contextPath}/rest/products/#{_product.id}">/rest/products/#{_products.id}</a>
+	            <a href="#{request.contextPath}/rest/products/#{_product.id}">/rest/products/#{_product.id}</a>
 	         </h:column>
 	         
 	         <f:facet name="footer">
@@ -110,10 +119,16 @@
 	            <f:facet name="header">Cantidad</f:facet>
 	                #{_product.cantidad}
 	            </h:column>
+			<h:column>
+	            <f:facet name="header">Proveedor</f:facet>
+	                #{_product.provider.name}
+	            </h:column>
 	         <h:column>
 	            <f:facet name="header">REST URL</f:facet>
 	            <a href="#{request.contextPath}/rest/products/#{_product.id}">/rest/products/#{_products.id}</a>
 	         </h:column>
+	         
+
 
 	         <f:facet name="footer">
 	         	<a href="#{request.contextPath}/product.jsf"><h5>Modificar o Borrar Productos</h5></a>

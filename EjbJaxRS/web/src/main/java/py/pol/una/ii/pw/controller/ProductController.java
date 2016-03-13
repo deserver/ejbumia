@@ -28,6 +28,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import py.pol.una.ii.pw.model.Product;
+import py.pol.una.ii.pw.model.Provider;
 import py.pol.una.ii.pw.service.ProductRegistration;
 
 // The @Model stereotype is a convenience mechanism to make this a request-scoped bean that has an
@@ -55,10 +56,18 @@ public class ProductController {
     private Boolean show; 
     private Boolean nothingMatched = false;
     
+    private Long providerId;
+    
     @Produces
     @Named
     public String getProductName(){
     	return nameProduct;
+    }
+    
+    @Produces
+    @Named
+    public Long getIdProvider(){
+    	return providerId;
     }
     
     private Long someid;
@@ -88,9 +97,10 @@ public class ProductController {
     }
     
 
-    public void register() throws Exception {
+    public void register(String idprov) throws Exception {
 		try {
-            productRegistration.register(newProduct);
+			log.info("proveedor id = " + idprov);
+            productRegistration.register(newProduct, Long.valueOf(idprov));
             facesContext.addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_INFO, "Registered!", "Registration successful"));
             initNewProduct();
@@ -129,10 +139,11 @@ public class ProductController {
     	}
     }
     
-    public void registerMod() throws Exception{
+    public void registerMod(String idprov) throws Exception{
     	try {
     		log.info("newproduct = " + newProduct.getId());
-    		productRegistration.update(newProduct);
+    		
+    		productRegistration.update(newProduct, Long.valueOf(idprov));
             facesContext.addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_INFO, "Modified!", "Modification successful"));
             initNewProduct();

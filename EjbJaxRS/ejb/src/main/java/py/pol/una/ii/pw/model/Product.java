@@ -18,10 +18,14 @@ package py.pol.una.ii.pw.model;
 
 import java.io.Serializable;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Digits;
@@ -52,6 +56,10 @@ public class Product implements Serializable {
     @Digits(fraction = 0, integer = 10)
     @Column(name = "cantidad")
     private String cantidad;
+    
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="provider_id")
+    private Provider provider;
 
     
     public Long getId() {
@@ -77,5 +85,17 @@ public class Product implements Serializable {
     public void setCantidad(String cantidad) {
         this.cantidad = cantidad;
     }
+
+	public Provider getProvider() {
+		return provider;
+	}
+
+	public void setProvider(Provider provider) {
+		this.provider = provider;
+		/*if (!provider.getProducts().contains(this))
+			provider.getProducts().add(this);*/
+	}
+    
+    
     
 }
