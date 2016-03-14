@@ -119,7 +119,8 @@ public class ProductController {
                     new FacesMessage(FacesMessage.SEVERITY_INFO, "Deleted!", "Delete successful"));
     	}catch (Exception e){
     		String errorMessage = getRootErrorMessage(e);
-            FacesMessage m = new FacesMessage(FacesMessage.SEVERITY_ERROR, errorMessage, "Registration Unsuccessful");
+            FacesMessage m = new FacesMessage(FacesMessage.SEVERITY_ERROR, errorMessage, 
+            		"Registration Unsuccessful");
             facesContext.addMessage(null, m);
     	}
     }
@@ -127,6 +128,7 @@ public class ProductController {
     public void modify(Long id) throws Exception{
     	try{
     		newProduct = productRegistration.getProduct(id);
+    		providerId = newProduct.getProvider().getId();
     		someid = id;
     		log.info("Some Id = " + id);
     		//newProduct.setId(modProduct.getId());
@@ -134,7 +136,8 @@ public class ProductController {
     		//newProduct.setName(modProduct.getName());
     	}catch (Exception e){
     		String errorMessage = getRootErrorMessage(e);
-            FacesMessage m = new FacesMessage(FacesMessage.SEVERITY_ERROR, errorMessage, "Registration Unsuccessful");
+            FacesMessage m = new FacesMessage(FacesMessage.SEVERITY_ERROR, errorMessage, 
+            		"Registration Unsuccessful");
             facesContext.addMessage(null, m);
     	}
     }
@@ -149,7 +152,8 @@ public class ProductController {
             initNewProduct();
         } catch (Exception e) {
             String errorMessage = getRootErrorMessage(e);
-            FacesMessage m = new FacesMessage(FacesMessage.SEVERITY_ERROR, errorMessage, "Registration Unsuccessful");
+            FacesMessage m = new FacesMessage(FacesMessage.SEVERITY_ERROR, errorMessage, 
+            		"Registration Unsuccessful");
             facesContext.addMessage(null, m);
         }
     }

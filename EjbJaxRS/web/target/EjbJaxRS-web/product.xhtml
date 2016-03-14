@@ -45,6 +45,11 @@
             <h:inputText id="cantidad" value="#{newProduct.cantidad}"/>
             <h:message for="cantidad" errorClass="invalid"/>
             
+			<h:outputLabel id="prov"  value="Proveedor:"/>
+            <h:outputLabel id="empty" value="No existen proveedores registrados" rendered="#{empty providers}"/>
+            <h:selectOneMenu  value="#{idProvider}" rendered="#{not empty providers}">
+            	<f:selectItems value="#{providers}" var="p" itemLabel="#{p.name}" itemValue="#{p.id}"></f:selectItems>
+            </h:selectOneMenu>
             
          </h:panelGrid>
          <p>
