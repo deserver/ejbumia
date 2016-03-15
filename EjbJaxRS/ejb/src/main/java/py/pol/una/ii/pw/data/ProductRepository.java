@@ -19,12 +19,16 @@ package py.pol.una.ii.pw.data;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+
+
 import java.util.List;
 
 import py.pol.una.ii.pw.model.Product;
+import py.pol.una.ii.pw.model.Provider;
 
 @ApplicationScoped
 public class ProductRepository {
@@ -45,5 +49,25 @@ public class ProductRepository {
         // criteria.select(member).orderBy(cb.asc(member.get(Member_.name)));
         criteria.select(member).orderBy(cb.asc(member.get("name")));
         return em.createQuery(criteria).getResultList();
+    }
+    
+    public List<Product> findAllbyProvider(Long idprov) {
+        /*CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Product> criteria = cb.createQuery(Product.class);
+        Root<Product> product = criteria.from(Product.class);
+        // Swap criteria statements if you would like to try out type-safe criteria queries, a new
+        // feature in JPA 2.0
+        // criteria.select(member).orderBy(cb.asc(member.get(Member_.name)));
+        criteria.select(product).orderBy(cb.asc(product.get("name")));*/
+
+       /* Provider proveedor = em.find(Provider.class, (long) idprov);
+
+        Query query = em.createQuery("SELECT p FROM Product  p WHERE p.proveedor = :proveedor");
+        query.setParameter("proveedor", proveedor);
+
+        List<Product> productos = query.getResultList();
+        return productos;*/
+        return em.createQuery("SELECT p FROM Product p, Provider d WHERE d.id = :idprov and p.provider = d ")
+	    		.setParameter("idprov", idprov).getResultList();
     }
 }

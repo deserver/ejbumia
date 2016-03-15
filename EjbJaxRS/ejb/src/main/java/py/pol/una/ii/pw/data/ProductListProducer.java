@@ -23,7 +23,11 @@ import javax.enterprise.event.Reception;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.persistence.Query;
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import py.pol.una.ii.pw.model.Product;
 
@@ -35,6 +39,13 @@ public class ProductListProducer {
 
     private List<Product> products;
     
+    private List<Product> productsByProv;
+    
+    private Long provId;
+    
+    @Inject
+    private Logger log;
+    
 
 
     // @Named provides access the return value via the EL variable name "members" in the UI (e.g.,
@@ -45,15 +56,57 @@ public class ProductListProducer {
         return products;
     }
     
+    @Produces
+    @Named
+    public List<Product> getProductsbyProv() {
+        return productsByProv;
+    }
+    
+    @Produces
+    @Named
+    public Long getProvId() {
+        return provId;
+    }
 
     
 
     public void onProductListChanged(@Observes(notifyObserver = Reception.IF_EXISTS) final Product product) {
         retrieveAllProductsOrderedByName();
     }
+    
+    public void onProductListbyProvChanged(@Observes(notifyObserver = Reception.IF_EXISTS) final Product product) {
+    	try{
+    		retrieveAllProductsByProvider(getProvId());
+    	}catch (Exception e){
+    		e.printStackTrace();
+    	}
+    	
+    }
 
     @PostConstruct
     public void retrieveAllProductsOrderedByName() {
         products = productRepository.findAllOrderedByName();
+    	try{
+    		productsByProv = productRepository.findAllbyProvider(provId);
+    	}catch (Exception e){
+    		e.printStackTrace();
+    	}
     }
+    
+    //@PostConstruct
+    @SuppressWarnings("unchecked")
+    public List<Product> retrieveAllProductsByProvider(Long idprov) {
+    	log.info("LLego hasta aca!" + idprov);
+    	try{
+    		return productsByProv = productRepository.findAllbyProvider(idprov);
+    	}catch (Exception e){
+    		e.printStackTrace();
+    		return new ArrayList<>();
+    	}
+    }
+    
+
+	public void setProvId(Long provId) {
+		this.provId = provId;
+	}
 }

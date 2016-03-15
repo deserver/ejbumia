@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    JBoss, Home of Professional Open Source
+    Copyright 2013, Red Hat, Inc. and/or its affiliates, and individual
+    contributors by the @authors tag. See the copyright.txt in the
+    distribution for a full listing of individual contributors.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+    http://www.apache.org/licenses/LICENSE-2.0
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+   xmlns:ui="http://java.sun.com/jsf/facelets"
+   xmlns:f="http://java.sun.com/jsf/core"
+   xmlns:h="http://java.sun.com/jsf/html"
+   template="/WEB-INF/templates/default.xhtml">
+   <ui:define name="content">
+      <h1>Modificar Productos #{productId}</h1>
+      <a href="#{request.contextPath}/productos.jsf">Atras</a>
+      
+
+      <div>
+         
+      </div>
+<!-- 
+      <h:form id="reg2">
+         <h2>Modificacion de Productos </h2>
+         <h:panelGrid columns="3" columnClasses="titleCell">
+         	
+            <h:outputLabel for="id" value="Id: "/>
+            <h:inputText id="id" value="#{newProduct.id}"/>
+            <h:message for="id" errorClass="invalid"/>
+
+			<h:outputLabel for="name" value="Nombre:"/>
+            <h:inputText id="name" value="#{newProduct.name}" />
+            <h:message for="name" errorClass="invalid"/>
+            
+            <h:outputLabel for="cantidad" value="Cantidad:"/>
+            <h:inputText id="cantidad" value="#{newProduct.cantidad}"/>
+            <h:message for="cantidad" errorClass="invalid"/>
+            
+			<h:outputLabel id="prov"  value="Proveedor:"/>
+            <h:outputLabel id="empty" value="No existen proveedores registrados" rendered="#{empty providers}"/>
+            <h:selectOneMenu  value="#{idProvider}" rendered="#{not empty providers}">
+            	<f:selectItems value="#{providers}" var="p" itemLabel="#{p.name}" itemValue="#{p.id}"></f:selectItems>
+            </h:selectOneMenu>
+            
+         </h:panelGrid>
+         <p>
+            <h:panelGrid columns="2">
+				<h:commandButton id="modify" type="submit" action="#{productController.registerMod(idProvider)}" method="POST" value="Modify" styleClass="register"/>
+            </h:panelGrid>
+         </p>
+      </h:form>
+      
+       -->
+      <h2>Productos</h2>
+      <h:panelGroup rendered="#{empty products}">
+         <em>No registered products.</em>
+      </h:panelGroup>
+      <h:dataTable var="_product" value="#{products}" rendered="#{not empty products}" styleClass="simpletablestyle">
+
+         <h:column>
+            <f:facet name="header">Id</f:facet>
+                #{_product.id}
+            </h:column>
+         <h:column>
+            <f:facet name="header">Name</f:facet>
+                #{_product.name}
+            </h:column>
+         <h:column>
+            <f:facet name="header">Cantidad</f:facet>
+                #{_product.cantidad}
+            </h:column>
+		<h:column>
+            <f:facet name="header">Proveedor</f:facet>
+                #{_product.provider.name}
+            </h:column>
+         <h:column>
+            <f:facet name="header">REST URL</f:facet>
+            <a href="#{request.contextPath}/rest/products/#{_product.id}">/rest/products/#{_products.id}</a>
+         </h:column>
+          <h:column>
+            <f:facet name="header">Accion</f:facet>
+            <h:form id="del" style="width: 100px">
+            	<!-- <h:input type="hidden" value="#{_product.id}"/> -->
+            	<h:commandButton id="mod" type="submit" action="#{productController.modify(_product.id)}" method="POST" styleClass="" value="Modificar"/>
+            	<h:commandButton id="del" type="submit" action="#{productController.delete(_product.id)}" method="POST" styleClass="" value="Borrar"/>
+            </h:form>
+         </h:column>
+         <f:facet name="footer">
+            REST URL for all products: <a href="#{request.contextPath}/rest/products">/rest/products</a>
+         </f:facet>
+      </h:dataTable>
+   </ui:define>
+   
+</ui:composition>

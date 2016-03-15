@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    JBoss, Home of Professional Open Source
+    Copyright 2013, Red Hat, Inc. and/or its affiliates, and individual
+    contributors by the @authors tag. See the copyright.txt in the
+    distribution for a full listing of individual contributors.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+    http://www.apache.org/licenses/LICENSE-2.0
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+   xmlns:ui="http://java.sun.com/jsf/facelets"
+   xmlns:f="http://java.sun.com/jsf/core"
+   xmlns:h="http://java.sun.com/jsf/html"
+   template="/WEB-INF/templates/default.xhtml">
+   <ui:define name="content">
+      <h1>Comprar Productos</h1>
+		<a href="#{request.contextPath}/index.jsf"><h5>Atras</h5></a>
+      <div>
+         
+      </div>
+      <h2>Selecconar Proveedor</h2>
+      <h:form id="prov">
+			<h:selectOneMenu value="#{idProvider}" rendered="#{not empty providers}">
+            	<f:selectItems value="#{providers}" var="p" itemLabel="#{p.name}" itemValue="#{p.id}"></f:selectItems>
+            </h:selectOneMenu>
+		<p>
+            <h:panelGrid columns="2">
+               <h:commandButton id="select" action="#{productController.getProdProv(idProvider)}" value="Select" styleClass="select"/>
+               <h:messages styleClass="messages" errorClass="invalid" infoClass="valid" warnClass="warning"
+                           globalOnly="true"/>
+            </h:panelGrid>
+         </p>
+      </h:form>
+       <h2>Listar</h2>
+       <h:form>
+		<h5>Matches</h5>
+	      <h2>Productos</h2>
+	      
+	      <h:panelGroup rendered="#{empty matches}">
+	         <em>No registered products.</em>
+	      </h:panelGroup>
+	      
+	      <h:dataTable id="idname" var="_product" value="#{matches}" rendered="#{not empty matches}" styleClass="simpletablestyle">
+	      		
+	         <h:column>
+	            <f:facet name="header">Id</f:facet>
+	                #{_product.id}
+	            </h:column>
+	         <h:column>
+	            <f:facet name="header">Name</f:facet>
+	                #{_product.name}
+	            </h:column>
+	         <h:column>
+	            <f:facet name="header">Cantidad</f:facet>
+	                #{_product.cantidad}
+	            </h:column>
+			<h:column>
+	            <f:facet name="header">Proveedor</f:facet>
+	                #{_product.provider.name}
+	            </h:column>
+	         <h:column>
+	            <f:facet name="header">REST URL</f:facet>
+	            <a href="#{request.contextPath}/rest/products/#{_product.id}">/rest/products/#{_product.id}</a>
+	         </h:column>
+             <h:column>
+	            <f:facet name="header">Accion</f:facet>
+	            	<h:form id="del" style="width: 100px">
+	            		<h:commandButton id="modify" immediate="true"  rendered="true" submit" action="#{productController.registerMod(idProvider)}" method="POST" value="Modify" styleClass="register"/>
+	            	</h:form>
+       			</h:column>
+	         
+	      </h:dataTable>
+        		
+       </h:form>
+      
+      
+       
+   </ui:define>
+</ui:composition>

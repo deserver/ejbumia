@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    JBoss, Home of Professional Open Source
+    Copyright 2013, Red Hat, Inc. and/or its affiliates, and individual
+    contributors by the @authors tag. See the copyright.txt in the
+    distribution for a full listing of individual contributors.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+    http://www.apache.org/licenses/LICENSE-2.0
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+   xmlns:ui="http://java.sun.com/jsf/facelets"
+   xmlns:f="http://java.sun.com/jsf/core"
+   xmlns:h="http://java.sun.com/jsf/html"
+   template="/WEB-INF/templates/default.xhtml">
+   <ui:define name="content">
+      <h1>Comprar Productos</h1>
+		<a href="#{request.contextPath}/index.jsf"><h5>Atras</h5></a>
+      <div>
+         
+      </div>
+       <!--
+      <h2>Selecconar Proveedor</h2>
+       <h:form id="prov">
+			<h:selectOneMenu value="#{idProvider}" rendered="#{not empty providers}">
+            	<f:selectItems value="#{providers}" var="p" itemLabel="#{p.name}" itemValue="#{p.id}"></f:selectItems>
+            </h:selectOneMenu>
+		<p>
+            <h:panelGrid columns="2">
+               
+               <h:commandButton action="compra" value="Comprar del Proveedor" />
+               <h:messages styleClass="messages" errorClass="invalid" infoClass="valid" warnClass="warning"
+                           globalOnly="true"/>
+            </h:panelGrid>
+         </p>
+      </h:form>
+       -->  
+      <h:form id="CreateCompras">
+      	<h:panelGrid id="formCompra"  columns="3" style="width:100%;">
+                <h:outputLabel value="Proveedor" />
+                <h:selectOneMenu value="#{proveedorId}" converter="javax.faces.Long"
+                                 id="proveedorCompra" maxlength="50" style="width:100%;height:100%"
+                                 required="true" requiredMessage="Describa el Proveedor">
+
+                    <f:selectItem itemLabel="Seleccione un Proveedor" itemValue="" noSelectionOption="true" />
+                    <f:selectItems value="#{providers}" var="proov" itemValue="#{proov.id}"
+                                   itemLabel="#{proov.name}"/>
+
+                    <f:ajax event="valueChange" process="proveedorCompra" update="formCompraDetalle" /> 
+                     <h:commandButton id="act" action="#{compraController.getProductoByProveedor(proveedorId)}" update="formCompraDetalle" style="margin-left: 15px;" value="Go" label="Go"/> 
+
+                </h:selectOneMenu>
+                <h:messages style="margin-left: 15px;" for="proveedorCompra" />
+
+            </h:panelGrid>
+            <br/>
+			
+            <h:panelGrid id="formCompraDetalle"  columns="3" style="width:100%;">
+                <h:outputLabel value="Producto" />
+                <h:selectOneMenu disabled="#{compraController.proveedorId==null}" value="#{compraController.productoId}" converter="javax.faces.Long"
+                                 id="productoCompraDetalle" maxlength="50" style="width:100%;height:100%"
+                                 required="true" >
+
+                    <f:selectItem itemLabel="Seleccione un producto" itemValue="" noSelectionOption="true" />
+					<f:selectItems value="#{compraController.getProductoByProveedor(compraController.provint)}" var="prod" itemValue="#{prod.id}"
+                                   itemLabel="#{prod.name}"/>
+                </h:selectOneMenu>
+                <h:messages style="margin-left: 15px;" for="productoCompraDetalle" />
+
+                <h:outputLabel value="Cantidad" />
+                <h:inputText value="#{compraController.cantidad}"
+                             id="cantidadCompraDetalle" maxlength="50" style="width:100%;height:100%"
+                             required="true" requiredMessage="Describa la cantidad del producto" >
+                </h:inputText>
+                <h:commandButton id="addCompraDetalle" update=":form:tabla_compras productoCompraDetalle cantidadCompraDetalle listaCompraDetalle formCompraDetalle" process="formCompraDetalle"
+                                 actionListener="#{compraController.addDetalleCompra}" style="margin-left: 15px;" />
+            </h:panelGrid>
+            <br/>
+			<h:dataTable style="width: 500px;"  id="listaCompraDetalle" value="#{compraController.compraDetalle}" emptyMessage="No existen registros"
+                         rowIndexVar="index" rowKey="index" var="det">
+                <h2>Lista de Productos</h2>
+
+                <h:column style="width: 150px">
+                    #{det.producto.name}
+                </h:column>
+
+
+                <h:column style="width: 100px" >
+                    #{det.cantidad}
+                </h:column>
+
+                <!-- BTN eliminar -->
+                <h:column style="width:35px;text-align: center">
+                    <h:commandButton process="listaCompraDetalle" update="listaCompraDetalle :messages"
+                                     actionListener="#{compraController.delete(det.id)}" >
+                    </h:commandButton>
+                </h:column>
+ 			</h:dataTable>
+ 		</h:form>
+       
+   </ui:define>
+</ui:composition>

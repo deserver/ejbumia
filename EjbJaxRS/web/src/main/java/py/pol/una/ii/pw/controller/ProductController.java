@@ -17,12 +17,18 @@
 package py.pol.una.ii.pw.controller;
 
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.inject.Model;
 import javax.enterprise.inject.Produces;
 import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.RequestScoped;
+import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -30,12 +36,15 @@ import javax.inject.Named;
 import py.pol.una.ii.pw.model.Product;
 import py.pol.una.ii.pw.model.Provider;
 import py.pol.una.ii.pw.service.ProductRegistration;
+import py.pol.una.ii.pw.data.ProductListProducer;
 
 // The @Model stereotype is a convenience mechanism to make this a request-scoped bean that has an
 // EL name
 // Read more about the @Model stereotype in this FAQ:
 // http://sfwk.org/Documentation/WhatIsThePurposeOfTheModelAnnotation
 @Model
+@ViewScoped
+@ManagedBean
 public class ProductController {
 
     @Inject
@@ -46,10 +55,14 @@ public class ProductController {
 
     @Inject
     private ProductRegistration productRegistration;
+    
+    @Inject
+    private ProductListProducer productListProducer;
 
     private Product newProduct;
     
-    private List<Product> productsmatched;
+    private List<Product> matches;
+    private List<Product> matchesByProv;
     
     private String nameProduct;
     
@@ -57,6 +70,9 @@ public class ProductController {
     private Boolean nothingMatched = false;
     
     private Long providerId;
+    
+    @ManagedProperty(value="#{param.id}")
+    private Long productId;
     
     @Produces
     @Named
@@ -67,7 +83,14 @@ public class ProductController {
     @Produces
     @Named
     public Long getIdProvider(){
+    	productListProducer.setProvId(providerId);
     	return providerId;
+    }
+    
+    @Produces
+    @Named
+    public Long getProductId(){
+    	return productId = newProduct.getId();
     }
     
     private Long someid;
@@ -81,8 +104,16 @@ public class ProductController {
     @Produces
     @Named
     public List<Product> getMatches(){
-    	return productsmatched;
+    	return matches;
     }
+    /*
+    @Produces
+    @Named
+    public List<Product> getMatchesByProv(){
+    	log.info("getMatchesbyprov = "+ providerId);
+    	listarProductos(providerId.toString());
+    	return matches;
+    }*/
     
     @Produces
     @Named
@@ -127,10 +158,36 @@ public class ProductController {
     
     public void modify(Long id) throws Exception{
     	try{
+    		log.info("modify " + id);
+    		Map<String,String> params = 
+    		            facesContext.getExternalContext().getRequestParameterMap();
+    		String idString = params.get("id");
+    		id = Long.parseLong(idString);
+    		
+    		//String trxNo = facesContext.getExternalContext().getRequestParameterMap().get("id");
+    		log.info("modify " + id);
     		newProduct = productRegistration.getProduct(id);
     		providerId = newProduct.getProvider().getId();
     		someid = id;
     		log.info("Some Id = " + id);
+    		//newProduct.setId(modProduct.getId());
+    		//newProduct.setCantidad(modProduct.getCantidad());
+    		//newProduct.setName(modProduct.getName());
+    	}catch (Exception e){
+    		String errorMessage = getRootErrorMessage(e);
+            FacesMessage m = new FacesMessage(FacesMessage.SEVERITY_ERROR, errorMessage, 
+            		"Registration Unsuccessful");
+            facesContext.addMessage(null, m);
+    	}
+    }
+    
+    public void modify() throws Exception{
+    	try{
+    		log.info("modify " + productId);
+    		newProduct = productRegistration.getProduct(productId);
+    		providerId = newProduct.getProvider().getId();
+    		someid = productId;
+    		log.info("Some Id = " + productId);
     		//newProduct.setId(modProduct.getId());
     		//newProduct.setCantidad(modProduct.getCantidad());
     		//newProduct.setName(modProduct.getName());
@@ -160,15 +217,47 @@ public class ProductController {
     
     public void search(String name){
     	log.info("Name: " + name);
-    	productsmatched = (List<Product>)productRegistration.search(name);
+    	matches = (List<Product>)productRegistration.search(name);
 		
-		if (!productsmatched.isEmpty()){
-			log.info("List = " + productsmatched.get(0));
+		if (!matches.isEmpty()){
+			log.info("List = " + matches.get(0));
     	}else{
 			log.info("Vacio = ");
 			nothingMatched = true;
 		}
     }
+    
+    public void getProdProv(String idprov){
+    	
+    	log.info("idprov getProdProv=" + idprov);
+    	providerId = Long.valueOf(idprov);
+    	try {
+    		matches = productRegistration.getProductsbyProv(Long.valueOf(idprov));
+    	}catch (Exception e) {
+			e.printStackTrace();
+		}
+    }
+    
+    
+    public List<Product> listarProductos(String idprov){
+    	
+    	log.info("idprov listarproductos=" + idprov);
+    	try {
+    		matches = productRegistration.getProductsbyProv(Long.valueOf(idprov));
+    		return matches;
+    	}catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+    }
+    
+    public Long getIdProd(){
+    	String value = facesContext.getCurrentInstance().getExternalContext() .getRequestParameterMap().get(productId.toString());
+    	productId =  Long.valueOf(productId);
+    	return productId;
+    }
+    
+    
     
     public void showList() throws Exception{
     	try{
@@ -176,6 +265,13 @@ public class ProductController {
     	}catch (Exception e){
     		e.printStackTrace();
     	}
+    }
+    
+    public void init(Long idprod) {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        if (!facesContext.isPostback() && !facesContext.isValidationFailed()) {
+            log.info("Llego esto: " + idprod);
+        }
     }
 
     @PostConstruct

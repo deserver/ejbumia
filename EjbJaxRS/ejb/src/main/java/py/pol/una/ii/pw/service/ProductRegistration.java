@@ -23,7 +23,6 @@ import javax.ejb.Stateless;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -86,6 +85,26 @@ public class ProductRegistration {
     		log.info("Esta vacio nio");
     	return result;
     }
+    
+    public List<Product> getProductsbyProv(Long idprov) throws Exception{
+    	log.info("Searching " + idprov);
+    	List<Product> result = null;
+    	try{
+	    	result = (List<Product>)em.createQuery("SELECT p FROM Product p, Provider d WHERE d.id = :idprov and p.provider = d ")
+	    		.setParameter("idprov", idprov)
+	    		.setMaxResults(10)
+	    		.getResultList();
+	    	log.info("Hizo el select " + idprov);
+	    	if (result.isEmpty())
+	    		log.info("Esta vacio nio");
+	    	
+    	}catch (Exception e){
+    		e.printStackTrace();
+    	}
+    	return result;
+    	
+    }
+    
     public Product getProduct(Long id){
     	Product product = new Product();
     	product = em.find(Product.class, id);
